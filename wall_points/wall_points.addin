@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+	<AddIn Type="Command">
+		<Assembly>C:\tmp\revit\wall_points.dll</Assembly>
+		<AddInId>EB7E45B5-22CC-42A6-9C54-99521778662F</AddInId>
+		<FullClassName>wall_points.Main</FullClassName>
+		<VendorId>ADSK</VendorId>
+		<Text>Create walls</Text>
+	</AddIn>
+</RevitAddIns>
