@@ -13,7 +13,7 @@ namespace wall_points
     {
         public int ID;
         public string Name;
-        public Dictionary<string, List<Dictionary<string, GeomObject>>> Categories = new Dictionary<string, List<Dictionary<string, GeomObject>>>();
+        public Dictionary<string, Dictionary<string, object>> Categories = new Dictionary<string, Dictionary<string, object>>();
 
         public RVTlevel(Level level) 
         {
@@ -21,7 +21,7 @@ namespace wall_points
             Name = level.Name.ToString();
             foreach (BuiltInCategory car in StaticData.BuiltCats)
             {
-                Categories[car.ToString().Replace("OST_", "")] = new List<Dictionary<string, GeomObject>>();
+                Categories[car.ToString().Replace("OST_", "")] = new Dictionary<string, object>();
             }
         }
     }

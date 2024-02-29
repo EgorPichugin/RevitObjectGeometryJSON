@@ -176,39 +176,29 @@ namespace wall_points
                     GeometryElement gElem = ((Element)elem).get_Geometry(sgo);
                     GeomObject geomObj = new GeomObject();
 
-                    // find color
-                    //ElementId matId = elem.get_Parameter(BuiltInParameter.MATERIAL_ID_PARAM).AsElementId();
-                    //List<double> RVTcolor = new List<double>();
-                    //if (matId != null)
-                    //{
-                    //    Material mat = doc.GetElement(matId) as Material;
-                    //    Color color = mat.Color;
-                    //    RVTcolor.Add(color.Red / 255);
-                    //    RVTcolor.Add(color.Green / 255);
-                    //    RVTcolor.Add(color.Blue / 255);
-                    //}
-
-                    //if (RVTcolor.Count > 0)
-                    //    geomObj.material = RVTcolor;
-                    //else
-                    geomObj.material = new List<double> { 1, 1, 1 };
-
+                    //geomObj.material = new List<double> { 1, 1, 1 };
                     foreach (GeometryObject gObj in gElem)
                     {
                         //strings.Add($"wall: {wElem.Id}\n");
                         Solid solid = gObj as Solid;
                         if (solid != null)
                         {
+                            int faceCount = 0;
+
                             foreach (Face face in solid.Faces)
                             {
-                                //tmp face material
+                                FaceObject faceObject = new FaceObject();
+
+                                // face material
                                 ElementId mtrlId = face.MaterialElementId;
                                 Material mtrl = (Material)doc.GetElement(mtrlId);
                                 Color color = mtrl.Color;
                                 byte r = color.Red;
                                 byte g = color.Green;
                                 byte b = color.Blue;
-                                //tmp
+                                faceObject.material.Add((double)r / 255);
+                                faceObject.material.Add((double)g / 255);
+                                faceObject.material.Add((double)b / 255);
 
                                 Mesh mesh = face.Triangulate();
                                 PlanarFace planarFace = face as PlanarFace;
@@ -231,16 +221,19 @@ namespace wall_points
                                     triangles.Add(mtrngl.get_Vertex(2).Y);
                                     triangles.Add(mtrngl.get_Vertex(2).Z);
                                     Dictionary<string, List<double>> tri = new Dictionary<string, List<double>> { { "vertices", triangles }, { "normals", normals } };
-                                    geomObj.geometry.Add(tri);
+                                    faceObject.geometry.Add(tri);
                                 }
+
+                                string faceName = elem.UniqueId + faceCount.ToString();
+                                geomObj.faces[faceName] = faceObject;
+
+                                faceCount++;
                             }
                         }
                         else if (gObj is GeometryInstance)
                         {
                             GeometryInstance geoInst = gObj as GeometryInstance;
-
                             GeometryElement geoElem = geoInst.SymbolGeometry;
-
                             Transform transform = geoInst.Transform;
 
                             XYZ b0 = transform.get_Basis(0);
@@ -254,13 +247,26 @@ namespace wall_points
 
                                 if (solid2 != null)
                                 {
+                                    int faceCount = 0;
+
                                     foreach (Face face in solid2.Faces)
                                     {
+                                        FaceObject faceObject = new FaceObject();
+
+                                        // face material
+                                        ElementId mtrlId = face.MaterialElementId;
+                                        Material mtrl = (Material)doc.GetElement(mtrlId);
+                                        Color color = mtrl.Color;
+                                        byte r = color.Red;
+                                        byte g = color.Green;
+                                        byte b = color.Blue;
+                                        faceObject.material.Add((double)r / 255);
+                                        faceObject.material.Add((double)g / 255);
+                                        faceObject.material.Add((double)b / 255);
 
                                         Mesh mesh = face.Triangulate();
                                         PlanarFace planarFace = face as PlanarFace;
                                         XYZ n = planarFace.FaceNormal;
-
 
                                         List<double> normals = new List<double> { n.X, n.Y, n.Z };
 
@@ -278,18 +284,14 @@ namespace wall_points
                                             triangles.Add(mtrngl.get_Vertex(2).X * b0.Y + mtrngl.get_Vertex(2).Y * b1.Y + mtrngl.get_Vertex(2).Z * b2.Y + origin.Y);
                                             triangles.Add(mtrngl.get_Vertex(2).X * b0.Z + mtrngl.get_Vertex(2).Y * b1.Z + mtrngl.get_Vertex(2).Z * b2.Z + origin.Z);
 
-                                            //triangles.Add(mtrngl.get_Vertex(0).X);
-                                            //triangles.Add(mtrngl.get_Vertex(0).Y);
-                                            //triangles.Add(mtrngl.get_Vertex(0).Z);
-                                            //triangles.Add(mtrngl.get_Vertex(1).X);
-                                            //triangles.Add(mtrngl.get_Vertex(1).Y);
-                                            //triangles.Add(mtrngl.get_Vertex(1).Z);
-                                            //triangles.Add(mtrngl.get_Vertex(2).X);
-                                            //triangles.Add(mtrngl.get_Vertex(2).Y);
-                                            //triangles.Add(mtrngl.get_Vertex(2).Z);
                                             Dictionary<string, List<double>> tri = new Dictionary<string, List<double>> { { "vertices", triangles }, { "normals", normals } };
-                                            geomObj.geometry.Add(tri);
+                                            faceObject.geometry.Add(tri);
                                         }
+
+                                        string faceName = elem.UniqueId + faceCount.ToString();
+                                        geomObj.faces[faceName] = faceObject;
+
+                                        faceCount++;
                                     }
                                 }
                             }
@@ -301,7 +303,8 @@ namespace wall_points
                     
                     if (rvtLevel.Categories.ContainsKey(elem.Category.Name))
                     {
-                        rvtLevel.Categories[elem.Category.Name].Add(new Dictionary<string, GeomObject> { { elem.UniqueId.ToString(), geomObj } });
+                        //rvtLevel.Categories[elem.Category.Name] = new Dictionary<string, object> { { elem.UniqueId.ToString(), geomObj.faces } };
+                        rvtLevel.Categories[elem.Category.Name][elem.UniqueId.ToString()] = geomObj.faces;
                     }
                     //
                 }

@@ -11,12 +11,12 @@ namespace wall_points
     {
         public static List<BuiltInCategory> BuiltCats = new List<BuiltInCategory> { 
             BuiltInCategory.OST_Walls, 
-            BuiltInCategory.OST_Floors,
-            BuiltInCategory.OST_Roofs,
-            BuiltInCategory.OST_Windows,
-            BuiltInCategory.OST_Doors,
-            BuiltInCategory.OST_Columns,
-            BuiltInCategory.OST_StructuralColumns,
+            //BuiltInCategory.OST_Floors,
+            //BuiltInCategory.OST_Roofs,
+            //BuiltInCategory.OST_Windows,
+            //BuiltInCategory.OST_Doors,
+            //BuiltInCategory.OST_Columns,
+            //BuiltInCategory.OST_StructuralColumns,
         };
     }
 
