@@ -224,7 +224,7 @@ namespace wall_points
                                     faceObject.geometry.Add(tri);
                                 }
 
-                                string faceName = elem.UniqueId + faceCount.ToString();
+                                string faceName = elem.UniqueId + "_mesh_" + faceCount.ToString();
                                 geomObj.faces[faceName] = faceObject;
 
                                 faceCount++;
@@ -288,7 +288,7 @@ namespace wall_points
                                             faceObject.geometry.Add(tri);
                                         }
 
-                                        string faceName = elem.UniqueId + faceCount.ToString();
+                                        string faceName = elem.UniqueId + "_mesh_" + faceCount.ToString();
                                         geomObj.faces[faceName] = faceObject;
 
                                         faceCount++;
@@ -309,26 +309,6 @@ namespace wall_points
                     //
                 }
             }
-
-            //TaskDialog.Show("info", str);
-            //tmp
-            //List<Element> levels = new FilteredElementCollector(doc)
-            //    .WhereElementIsNotElementType()
-            //    .OfCategory(BuiltInCategory.OST_Levels)
-            //    .OrderBy(e => ((Level)e).Elevation)
-            //    .ToList();
-
-            //RVTmodel rvtModel = new RVTmodel();
-
-            //foreach (Element l in levels)
-            //{
-            //    RVTlevel rvtLevel = new RVTlevel { Height = ((Level)l).Elevation};
-
-            //    rvtModel.ModelInfo[l.Name] = rvtLevel;
-            //}
-
-            //Dictionary<string, Dictionary<string, RVTlevel>> d = new Dictionary<string, Dictionary<string, RVTlevel>> { { doc.Title, rvtModel.ModelInfo } };
-            ////tmp
 
             Dictionary<string, object> allLevels = new Dictionary<string, object>();
             foreach (RVTlevel rvtLvl in RVTlevels.rvtLevels.Values)
